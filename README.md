@@ -14,3 +14,8 @@ Get the below from the `requirements.txt`:
 ## Notes for Creating API
 - JavaScript Object Notation (JSON)/python dicts or pydantic objects are the only things your methods should return
 - Make sure in right folder if running `python main.py`, which calls on `app.py`
+- Can add the expected type of a parameter input in a function e.g.:
+```
+@app.get("/posts/{id}")
+def get_post(id: int):
+```
