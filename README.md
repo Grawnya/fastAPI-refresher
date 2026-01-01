@@ -19,3 +19,4 @@ Get the below from the `requirements.txt`:
 @app.get("/posts/{id}")
 def get_post(id: int):
 ```
+- If using the request body for method inputs, ensure there is a matching schema and include return values for enhanced documentation.
