@@ -20,3 +20,7 @@ Get the below from the `requirements.txt`:
 def get_post(id: int):
 ```
 - If using the request body for method inputs, ensure there is a matching schema and include return values for enhanced documentation.
+- Use alembic in production, but if testing locally and you add a column after a db has been generated. Can only do 2 of the following:
+  - Delete the DB and on running the API, it will generate a new DB with the new columns.
+  - Manually go into the sqlite DB and generate the new column with a SQL query.
+- Random reminder of SDK meaning: Software Development Kit - a collection of tools, libraries, documentation, and code samples that helps developers build applications for a specific platform (like Android, iOS), operating system, or service.s
