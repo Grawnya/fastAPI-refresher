@@ -23,4 +23,9 @@ def get_post(id: int):
 - Use alembic in production, but if testing locally and you add a column after a db has been generated. Can only do 2 of the following:
   - Delete the DB and on running the API, it will generate a new DB with the new columns.
   - Manually go into the sqlite DB and generate the new column with a SQL query.
-- Random reminder of SDK meaning: Software Development Kit - a collection of tools, libraries, documentation, and code samples that helps developers build applications for a specific platform (like Android, iOS), operating system, or service.s
+- Random reminder of SDK meaning: Software Development Kit - a collection of tools, libraries, documentation, and code samples that helps developers build applications for a specific platform (like Android, iOS), operating system, or service.
+
+## Authnetication and Authorisation
+- JWT stands for Json Web Tokens FYI for web auth tokens
+- For this example, will use FastAPI_User lib rather than MS Entra ID, but can just use MS entra ID in the future. MS Entra ID has no password handling in the app and is easily scalable, but you must integrate JWT verification for every request.
+
