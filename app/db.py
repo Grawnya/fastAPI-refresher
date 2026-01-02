@@ -9,8 +9,13 @@ from sqlalchemy.dialects.postgresql import UUID # native UUID type for postgres
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker # talk to the database asynchronously
 from sqlalchemy.orm import DeclarativeBase, relationship
 # DeclarativeBase is the base class for all models and relationship defines relationships between tables
-from datetime import datetime
-from fastapi_user.db import SQLAlchemyUserDatabase, SQLAlchemyUserTableUUID
+from datetime import datetime, timezone
+from fastapi_users_db_sqlalchemy import (
+    SQLAlchemyUserDatabase,
+    SQLAlchemyBaseUserTableUUID,
+)
+
+
 from fastapi import Depends
 
 # want to use sqlite and aiosqlite(async sqlite) locally
@@ -22,7 +27,7 @@ class Base(DeclarativeBase):
 
 # predefined SQLAlchemy table for users with UUID primary key, email, hashed password,
 # features such as is_active / is_superuser / etc. and it inherits from SQLAlchemy DeclarativeBase
-class User(SQLAlchemyUserTableUUID, Base):
+class User(SQLAlchemyBaseUserTableUUID, Base):
     posts = relationship("Post", back_populates="user") # it allows a user to have many posts, as it links a user to a post
     # if we wanted to flip the one to many relationship around i.e. one post to many users,
     # then the foreign key would have to be here instead i.e. foreign key refers to the one attr in the object that will be many
@@ -39,7 +44,7 @@ class Post(Base):
     url = Column(String, nullable=False)
     file_type = Column(String, nullable=False)
     file_name = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.timezone.utc)
+    created_at = Column(DateTime, default=timezone.utc)
     
     user = relationship("User", back_populates="posts")
 

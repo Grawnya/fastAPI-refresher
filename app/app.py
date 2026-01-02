@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form, Depends
-from app.schemas import PostCreate
+from app.schemas import PostCreate, UserCreate, UserRead, UserUpdate
 from app.db import Post, create_db_and_tables, get_async_session
 from sqlalchemy.ext.asyncio import  AsyncSession
 from contextlib import asynccontextmanager
@@ -8,7 +8,8 @@ from app.images import imagekit
 import shutil
 import os
 import uuid
-import tempfile 
+import tempfile
+from app.users import auth_backend, current_active_user, fastapi_users
 
 # FastAPI lifespan handler, where code runs when the app starts, and (optionally) when it shuts down
 # As code before yield, runs at startup and code after yield, runs at shutdown
@@ -19,6 +20,14 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+
+# say that you want to include all the endpoints that are automatically provided by fastapi_users
+# fastapi_users.get_auth_router(auth_backend) is the connection to all API endpoints
+app.include_router(fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"])
+app.include_router(fastapi_users.get_register_router(UserRead, UserCreate), prefix="/auth", tags=["auth"])
+app.include_router(fastapi_users.get_reset_password_router(), prefix="/auth", tags=["auth"])
+app.include_router(fastapi_users.get_verify_router(UserRead), prefix="/auth", tags=["auth"])
+app.include_router(fastapi_users.get_users_router(UserRead, UserUpdate), prefix="/users", tags=["users"])
 
 # text_posts = {
 #     1: {"title": "New Post", "content": "Test post."},

@@ -28,4 +28,5 @@ def get_post(id: int):
 ## Authnetication and Authorisation
 - JWT stands for Json Web Tokens FYI for web auth tokens
 - For this example, will use FastAPI_User lib rather than MS Entra ID, but can just use MS entra ID in the future. MS Entra ID has no password handling in the app and is easily scalable, but you must integrate JWT verification for every request.
+- If you commit a file that you wanted to ignore, (not good practice) but can remove cached commit with `git rm --cached file-name`.
 
