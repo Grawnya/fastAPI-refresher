@@ -11,23 +11,27 @@ import os
 SECRET = os.getenv("SECRET") # wihout one, people could pretend to be any user and forge tokens
 # When you generate a token, the server signs it with SECRET and when a client sends a token, the server verifies the signature
 
-
+# UUIDIDMixin tells fastapi_users your users use UUIDs instead of integers
+# BaseUserManager is the generic base manager for async operations
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
-    # FastAPI handles things like verification, password resets (on_after_forgot_password   ) etc. here,
+    # FastAPI handles things like verification, password resets (on_after_forgot_password) etc. here,
     #  but the user is able to override methods with an example below
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 
+# dependency generator for FastAPI
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db) # injecting the user_db inside the UserManager Class 
+# yield means that fastapi automatically handles cleanup after use
 
-
+# defines how JWT tokens are sent/received
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login") # login endping is the tokenURL
 
-def  get_jwt_strategy():
+# JWTs on login and verify JWTs for protected endpoints
+def get_jwt_strategy():
     return JWTStrategy(secret=os.getenv("SECRET"), lifetime_seconds=3600) # lifetime_seconds is how long the token is valid for
 
 auth_backend = AuthenticationBackend(
@@ -36,6 +40,8 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy
 )
 
+# this is the main helper class that registers routes for login, registration, password reset, verification, etc. and g
+# andles user authentication and database interaction
 # give the model that will be used, the user manager, and the backend that will be used, which is with the jwt token
 fastapi_users =  FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
 # when the current active user items is called, it will give the current active user by going and checking the users jwt token
