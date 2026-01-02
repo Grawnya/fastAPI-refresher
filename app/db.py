@@ -27,6 +27,7 @@ class Post(Base):
     caption = Column(Text)
     url = Column(String, nullable=False)
     file_type = Column(String, nullable=False)
+    file_name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 engine  = create_async_engine(DATABASE_URL) # creates an async db engine, which prepares the connection machinery
